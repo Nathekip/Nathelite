@@ -12,4 +12,12 @@ class Rocket {
   final double diameter;
   final int mass;
   final String engineType;
+
+  static Rocket mock()=>Rocket(
+    name: "Falcon Heavy",
+    height: 70,
+    diameter: 12.2,
+    mass: 1420788,
+    engineType: "merlin"
+  );
 }
