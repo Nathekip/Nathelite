@@ -20,4 +20,14 @@ class Rocket {
     mass: 1420788,
     engineType: "merlin"
   );
+
+  factory Rocket.fromJson(Map<String, dynamic> json) {
+    return Rocket(
+        name: json["name"],
+        height: json["height"]["meters"],
+        diameter: json["diameter"]["meters"],
+        mass: json["mass"]["kg"],
+        engineType: json["engines"]["type"],
+    );
+  }
 }
