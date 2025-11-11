@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/launch.model.dart';
+import '../pages/launch_detail.page.dart';
 
 class LaunchGridCard extends StatelessWidget {
   final Launch launch;
@@ -19,6 +20,14 @@ class LaunchGridCard extends StatelessWidget {
       margin: const EdgeInsets.all(8),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => LaunchDetailsPage(launch: launch),
+            ),
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -36,7 +45,6 @@ class LaunchGridCard extends StatelessWidget {
                 },
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -69,10 +77,7 @@ class LaunchGridCard extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 4),
-
-                  // Date
                   Text(
                     formattedDate,
                     style: TextStyle(
@@ -80,9 +85,7 @@ class LaunchGridCard extends StatelessWidget {
                       fontSize: 13,
                     ),
                   ),
-
                   const SizedBox(height: 4),
-
                   Text(
                     launch.details,
                     style: TextStyle(

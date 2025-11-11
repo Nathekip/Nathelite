@@ -56,7 +56,6 @@ class _HomePageState extends State<HomePage> {
             return const Center(child: Text("No data"));
           }
 
-          // --- Vue GRID ---
           if (_isGridView) {
             return GridView.builder(
               padding: const EdgeInsets.all(8),
@@ -71,8 +70,6 @@ class _HomePageState extends State<HomePage> {
                   LaunchGridCard(launch: launches[index]),
             );
           }
-
-          // --- Vue LISTE ---
           return ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 8),
             itemCount: launches.length,
