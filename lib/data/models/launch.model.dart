@@ -10,7 +10,8 @@ class Launch {
     this.failure,
     required this.patchUrl,
     required this.articleUrl,
-    required this.rocket
+    required this.rocket,
+    this.isLiked = false,
   });
 
   final String name;
@@ -20,18 +21,34 @@ class Launch {
   final String patchUrl;
   final String articleUrl;
   final Rocket rocket;
+  final bool isLiked;
+
+  Launch copyWith({bool? isLiked}) {
+    return Launch(
+      name: name,
+      details: details,
+      date: date,
+      failure: failure,
+      patchUrl: patchUrl,
+      articleUrl: articleUrl,
+      rocket: rocket,
+      isLiked: isLiked ?? this.isLiked,
+    );
+  }
 
   static List<Launch> mocks() => List<Launch>.generate(
-    50, (int index) => mock(),
+    50,
+        (int index) => mock(),
   );
 
-  static Launch mock()=>Launch(
+  static Launch mock() => Launch(
     name: "IWW",
     details: "Engine failure at 33 seconds and loss of vehicle",
     date: DateTime.utc(2006, 03, 25, 10, 30, 00, 12, 00),
     failure: Failure.mock(),
     patchUrl: "https://images2.imgbox.com/5b/02/QcxHUb5V_o.png",
-    articleUrl: "https://www.space.com/2196-spacex-inaugural-falcon-1-rocket-lost-launch.html",
+    articleUrl:
+    "https://www.space.com/2196-spacex-inaugural-falcon-1-rocket-lost-launch.html",
     rocket: Rocket.mock(),
   );
 
@@ -65,5 +82,4 @@ class Launch {
 
     return Launch.fromJson(json, rocket);
   }
-
 }

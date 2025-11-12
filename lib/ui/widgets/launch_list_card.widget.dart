@@ -3,14 +3,33 @@ import 'package:intl/intl.dart';
 import '../../data/models/launch.model.dart';
 import '../pages/launch_detail.page.dart';
 
-class LaunchListCard extends StatelessWidget {
+class LaunchListCard extends StatefulWidget {
   final Launch launch;
 
   const LaunchListCard({super.key, required this.launch});
 
   @override
+  State<LaunchListCard> createState() => _LaunchListCardState();
+}
+
+class _LaunchListCardState extends State<LaunchListCard> {
+  late bool isLiked;
+
+  @override
+  void initState() {
+    super.initState();
+    isLiked = widget.launch.isLiked;
+  }
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final formattedDate = DateFormat('dd-MM-yyyy').format(launch.date);
+    final formattedDate = DateFormat('dd-MM-yyyy').format(widget.launch.date);
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -18,7 +37,7 @@ class LaunchListCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => LaunchDetailsPage(launch: launch),
+            builder: (_) => LaunchDetailsPage(launch: widget.launch),
           ),
         );
       },
@@ -37,7 +56,7 @@ class LaunchListCard extends StatelessWidget {
                 bottomLeft: Radius.circular(12),
               ),
               child: Image.network(
-                launch.patchUrl,
+                widget.launch.patchUrl,
                 width: 100,
                 height: 120,
                 fit: BoxFit.cover,
@@ -49,7 +68,6 @@ class LaunchListCard extends StatelessWidget {
                 ),
               ),
             ),
-
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -57,11 +75,10 @@ class LaunchListCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child: Text(
-                            launch.name,
+                            widget.launch.name,
                             style: const TextStyle(
                               fontFamily: 'Akira',
                               fontSize: 18,
@@ -70,7 +87,20 @@ class LaunchListCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        IconButton(
+                          icon: Icon(
+                            isLiked
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: isLiked ? Colors.red : Colors.grey,
+                            size: 22,
+                          ),
+                          onPressed: toggleLike,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
                         Text(
                           formattedDate,
                           style: TextStyle(
@@ -83,7 +113,7 @@ class LaunchListCard extends StatelessWidget {
                           width: 12,
                           height: 12,
                           decoration: BoxDecoration(
-                            color: launch.failure == null
+                            color: widget.launch.failure == null
                                 ? Colors.green
                                 : Colors.red,
                             shape: BoxShape.circle,
@@ -91,11 +121,9 @@ class LaunchListCard extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 8),
-
                     Text(
-                      launch.details,
+                      widget.launch.details,
                       style: TextStyle(
                         color: Colors.grey[800],
                         fontSize: 14,

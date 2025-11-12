@@ -3,20 +3,37 @@ import 'package:intl/intl.dart';
 import '../../data/models/launch.model.dart';
 import '../pages/launch_detail.page.dart';
 
-class LaunchGridCard extends StatelessWidget {
+class LaunchGridCard extends StatefulWidget {
   final Launch launch;
 
   const LaunchGridCard({super.key, required this.launch});
 
   @override
+  State<LaunchGridCard> createState() => _LaunchGridCardState();
+}
+
+class _LaunchGridCardState extends State<LaunchGridCard> {
+  late bool isLiked;
+
+  @override
+  void initState() {
+    super.initState();
+    isLiked = widget.launch.isLiked;
+  }
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final formattedDate = DateFormat('dd-MM-yyyy').format(launch.date);
+    final formattedDate = DateFormat('dd-MM-yyyy').format(widget.launch.date);
 
     return Card(
       elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.all(8),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -24,7 +41,7 @@ class LaunchGridCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => LaunchDetailsPage(launch: launch),
+              builder: (_) => LaunchDetailsPage(launch: widget.launch),
             ),
           );
         },
@@ -32,17 +49,36 @@ class LaunchGridCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: Image.network(
-                launch.patchUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.image_not_supported, size: 40),
-                ),
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return const Center(child: CircularProgressIndicator());
-                },
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Image.network(
+                      widget.launch.patchUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: Colors.grey[300],
+                        child:
+                        const Icon(Icons.image_not_supported, size: 40),
+                      ),
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return const Center(
+                            child: CircularProgressIndicator());
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: IconButton(
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.red : Colors.white,
+                      ),
+                      onPressed: toggleLike,
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -51,11 +87,10 @@ class LaunchGridCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Text(
-                          launch.name,
+                          widget.launch.name,
                           style: const TextStyle(
                             fontFamily: 'Akira',
                             fontSize: 16,
@@ -69,7 +104,7 @@ class LaunchGridCard extends StatelessWidget {
                         width: 10,
                         height: 10,
                         decoration: BoxDecoration(
-                          color: launch.failure == null
+                          color: widget.launch.failure == null
                               ? Colors.green
                               : Colors.red,
                           shape: BoxShape.circle,
@@ -87,7 +122,7 @@ class LaunchGridCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    launch.details,
+                    widget.launch.details,
                     style: TextStyle(
                       color: Colors.grey[800],
                       fontSize: 13,
