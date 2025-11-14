@@ -80,6 +80,9 @@ class Launch {
       rocket = await LaunchService.getRocketById(rocketId);
     }
 
-    return Launch.fromJson(json, rocket);
+    final launch = Launch.fromJson(json, rocket);
+
+    final isLiked = await LaunchService.isLiked(launch.name);
+    return launch.copyWith(isLiked: isLiked);
   }
 }

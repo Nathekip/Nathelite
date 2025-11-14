@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nathelite/ui/data/api/launch.service.dart';
 import '../../data/models/launch.model.dart';
 import '../pages/launch_detail.page.dart';
 
@@ -21,9 +22,10 @@ class _LaunchGridCardState extends State<LaunchGridCard> {
     isLiked = widget.launch.isLiked;
   }
 
-  void toggleLike() {
+  Future<void> toggleLike() async {
+    final newLikeState = await LaunchService.toggleLike(widget.launch.name);
     setState(() {
-      isLiked = !isLiked;
+      isLiked = newLikeState;
     });
   }
 

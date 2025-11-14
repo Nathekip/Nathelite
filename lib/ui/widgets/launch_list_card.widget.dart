@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/launch.model.dart';
+import '../data/api/launch.service.dart';
 import '../pages/launch_detail.page.dart';
+
 
 class LaunchListCard extends StatefulWidget {
   final Launch launch;
@@ -21,9 +23,10 @@ class _LaunchListCardState extends State<LaunchListCard> {
     isLiked = widget.launch.isLiked;
   }
 
-  void toggleLike() {
+  Future<void> toggleLike() async {
+    final newLikeState = await LaunchService.toggleLike(widget.launch.name);
     setState(() {
-      isLiked = !isLiked;
+      isLiked = newLikeState;
     });
   }
 

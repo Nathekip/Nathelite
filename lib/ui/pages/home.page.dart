@@ -3,6 +3,7 @@ import 'package:nathelite/data/models/launch.model.dart';
 import 'package:nathelite/ui/data/api/launch.service.dart';
 import 'package:nathelite/ui/widgets/launch_list_card.widget.dart';
 import 'package:nathelite/ui/widgets/launch_grid_card.widget.dart';
+import 'package:nathelite/ui/widgets/onboarding.widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,10 +13,46 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isGridView = true; // <-- état d’affichage
+  bool _isGridView = true;
+  bool _showOnboarding = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkOnboarding();
+  }
+
+  Future<void> _checkOnboarding() async {
+    final isCompleted = await LaunchService.isOnboardingCompleted();
+    setState(() {
+      _showOnboarding = !isCompleted;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _completeOnboarding() async {
+    await LaunchService.completeOnboarding();
+    setState(() {
+      _showOnboarding = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Affiche un loader pendant la vérification de l'onboarding
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Affiche l'onboarding si nécessaire
+    if (_showOnboarding) {
+      return OnboardingWidget(onComplete: _completeOnboarding);
+    }
+
+    // Affiche la page principale
     return Scaffold(
       appBar: AppBar(
         title: const Text("SpaceX Launches"),
@@ -26,13 +63,12 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(_isGridView ? Icons.view_list : Icons.grid_view),
             onPressed: () {
               setState(() {
-                _isGridView = !_isGridView; // bascule entre grid et liste
+                _isGridView = !_isGridView;
               });
             },
           ),
         ],
       ),
-
       body: FutureBuilder<List<Launch>>(
         future: LaunchService.getLaunches(),
         builder: (context, snapshot) {
