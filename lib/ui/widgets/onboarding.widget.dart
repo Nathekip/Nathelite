@@ -64,7 +64,6 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
       body: SafeArea(
         child: Column(
           children: [
-            // Bouton Skip
             Align(
               alignment: Alignment.topRight,
               child: TextButton(
@@ -79,7 +78,6 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
               ),
             ),
 
-            // Contenu des pages
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -95,7 +93,6 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
               ),
             ),
 
-            // Indicateurs de page
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
@@ -114,7 +111,6 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
               ),
             ),
 
-            // Bouton Suivant/Commencer
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: SizedBox(

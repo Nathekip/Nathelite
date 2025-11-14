@@ -40,19 +40,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Affiche un loader pendant la vérification de l'onboarding
     if (_isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    // Affiche l'onboarding si nécessaire
     if (_showOnboarding) {
       return OnboardingWidget(onComplete: _completeOnboarding);
     }
 
-    // Affiche la page principale
     return Scaffold(
       appBar: AppBar(
         title: const Text("SpaceX Launches"),
